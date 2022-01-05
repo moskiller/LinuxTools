@@ -1,2 +1,16 @@
 # LinuxTools
 用于VPS上的一些脚本合集
+为了方便自己操作VPS，借用一下各位大佬的脚本。。。
+
+
+## 下载
+
+```shell
+wget -N https://raw.githubusercontent.com/moskiller/LinuxToolBox/main/LTBox.sh && chmod -R 777 LTBox.sh && bash LTBox.sh
+```
+
+
+## 运行
+```shell
+bash LTBox.sh
+```
