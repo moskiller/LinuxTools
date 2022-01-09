@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # 版本号和更新内容函数
-Version="0.0.1"
-Udate="2022/01/05"
-ChangeLog="脚本初始化"
+Version="0.0.2"
+Udate="2022/01/09"
+ChangeLog="新增aaPanel和一些测试脚本"
 
 # 自定义字体彩色函数
 red(){ echo -e "\033[31m\033[01m$1\033[0m"; }
@@ -165,7 +165,7 @@ case "$MenuNumber" in
      9 ) update ;;
      0 ) exit 0 ;;
      * ) red " !!! 您是不是按错了 ？？？   "
-         reading "请确认上述菜单中的数字，按回车键后，进行正确的输入..." Key
+         reading "请确认上述菜单中的数字，按回车键返回后，再进行正确的输入..." Key
          ;;
 esac
 done
@@ -197,7 +197,7 @@ case "$P1NumberInput" in
      5 ) changehostname ;;
      0 ) Start_Menu ;;
      * ) red " !!! 您是不是按错了 ？？？   "
-         reading "请确认上述菜单中的数字，按回车键后，进行正确的输入..." Key
+         reading "请确认上述菜单中的数字，按回车键返回后，再进行正确的输入..." Key
          ;;
 esac
 done
@@ -225,7 +225,7 @@ case "$P2NumberInput" in
      3 ) hijkpw ;;
      0 ) Start_Menu ;;
      * ) red " !!! 您是不是按错了 ？？？   "
-         reading "请确认上述菜单中的数字，按回车键后，进行正确的输入..." Key
+         reading "请确认上述菜单中的数字，按回车键返回后，再进行正确的输入..." Key
          ;;
 esac
 done
@@ -240,6 +240,7 @@ echo "请选择功能： "
 echo "          "
 echo "1. 安装 宝塔纯净版 7.6.0 (by hostcli.com)"
 echo "2. 安装 安装 X-UI面板 (by vaxilu)"
+echo "3. 安装 aaPanel (宝塔国际版)"
 echo "           "
 echo "0. 退出脚本"
 echo "                            "
@@ -249,9 +250,10 @@ reading "请输入选项:" P3NumberInput
 case "$P3NumberInput" in
      1 ) btclean ;;
      2 ) xui ;;
+     3 ）aaPanel ;;
      0 ) Start_Menu ;;
      * ) red " !!! 您是不是按错了 ？？？   "
-         reading "请确认上述菜单中的数字，按回车键后，进行正确的输入..." Key
+         reading "请确认上述菜单中的数字，按回车键返回后，再进行正确的输入..." Key
          ;;
 esac
 done
@@ -275,7 +277,7 @@ case "$P4NumberInput" in
      1 ) serverstatus ;;
      0 ) Start_Menu ;;
      * ) red " !!! 您是不是按错了 ？？？   "
-         reading "请确认上述菜单中的数字，按回车键后，进行正确的输入..." Key
+         reading "请确认上述菜单中的数字，按回车键返回后，再进行正确的输入..." Key
          ;;
 esac
 done
@@ -288,8 +290,12 @@ echo "5.运行测试脚本"
 echo "           "
 echo "请选择功能： "                  
 echo "          "
-echo "1. 流媒体解锁测试"
-echo "2. VPS三网测速"
+echo "1. 流媒体解锁测试（全面版, by lmc999）"
+echo "2. 流媒体解锁测试（简化版, by CoiaPrant）"
+echo "3. VPS三网测速"
+echo "4. Superbench 测试"
+echo "5. unixbench 跑分测试 (by rptec)"
+echo "6. bestTrace 测试回程脚本"
 echo "           "
 echo "0. 退出脚本"
 echo "                            "
@@ -297,11 +303,15 @@ while :
 do
 reading "请输入选项(回车键默认取消):" P5NumberInput
 case "$P5NumberInput" in
-     1 ) mediaUnblockTest ;;
-     2 ) vpsSpeedTest ;;
+     1 ) mediaUnblockTestAll ;;
+     2 ) mediaUnblockTest ;;
+     3 ) vpsSpeedTest ;;
+     4 ) superBench ;;
+     5 ) unixBench ;;
+     6 ) bestTrace ;;
      0 ) Start_Menu ;;
      * ) red " !!! 您是不是按错了 ？？？   "
-         reading "请确认上述菜单中的数字，按回车键后，进行正确的输入..." Key
+         reading "请确认上述菜单中的数字，按回车键返回后，再进行正确的输入..." Key
          ;;
 esac
 done
@@ -324,6 +334,16 @@ function warp(){
 
 function xui(){
     bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
+}
+
+function aaPanel(){
+    if [ $release = "Centos" ]; then
+        yum install -y wget && wget -O install.sh http://www.aapanel.com/script/install_6.0_en.sh && bash install.sh forum
+      elif [ $release = "Debian" ]; then
+        wget -O install.sh http://www.aapanel.com/script/install-ubuntu_6.0_en.sh && bash install.sh forum
+      else
+        wget -O install.sh http://www.aapanel.com/script/install-ubuntu_6.0_en.sh && sudo bash install.sh forum
+    fi
 }
 
 function macka(){
@@ -386,10 +406,12 @@ function btcleanupdata(){
     curl http://v7.hostcli.com/install/update6.sh|bash
 }
 
-
-
 function docker(){
     curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+}
+
+function mediaUnblockTestAll(){
+    bash <(curl -L -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/check.sh)
 }
 
 function mediaUnblockTest(){
@@ -398,6 +420,18 @@ function mediaUnblockTest(){
 
 function vpsSpeedTest(){
     bash <(curl -sSL "https://github.com/CoiaPrant/Speedtest/raw/main/speedtest-multi.sh")
+}
+
+function superBench(){
+    wget -qO- git.io/superbench.sh | bash
+}
+
+function unixBench(){
+    wget https://raw.githubusercontent.com/rptec/vps-shell/master/unixbench.sh && sh unixbench.sh
+}
+
+function bestTrace(){
+    wget -qO- git.io/besttrace | bash
 }
 
 function serverstatus(){
