@@ -241,6 +241,7 @@ echo "          "
 echo "1. 安装 宝塔纯净版 7.6.0 (by hostcli.com)"
 echo "2. 安装 安装 X-UI面板 (by vaxilu)"
 echo "3. 安装 aaPanel (宝塔国际版)"
+echo "4. 安装 Aria2一键脚本"
 echo "           "
 echo "0. 退出脚本"
 echo "                            "
@@ -250,7 +251,8 @@ reading "请输入选项:" P3NumberInput
 case "$P3NumberInput" in
      1 ) btclean ;;
      2 ) xui ;;
-     3 ）aapanel ;;
+     3 ) aapanel ;;
+     4 ) aria2onekey ;;
      0 ) Start_Menu ;;
      * ) red " !!! 您是不是按错了 ？？？   "
          reading "请确认上述菜单中的数字，按回车键返回后，再进行正确的输入..." Key
@@ -336,12 +338,20 @@ function xui(){
     bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 }
 
+function aria2onekey(){
+    if [ $release = "Centos" ]; then
+        yum install wget curl ca-certificates && wget -N git.io/aria2.sh && chmod +x aria2.sh && ./aria2.sh
+    else
+        apt install wget curl ca-certificates && wget -N git.io/aria2.sh && chmod +x aria2.sh && ./aria2.sh
+    fi
+}
+
 function aapanel(){
     if [ $release = "Centos" ]; then
         yum install -y wget && wget -O install.sh http://www.aapanel.com/script/install_6.0_en.sh && bash install.sh forum
-      elif [ $release = "Debian" ]; then
+    elif [ $release = "Debian" ]; then
         wget -O install.sh http://www.aapanel.com/script/install-ubuntu_6.0_en.sh && bash install.sh forum
-      else
+    else
         wget -O install.sh http://www.aapanel.com/script/install-ubuntu_6.0_en.sh && sudo bash install.sh forum
     fi
 }
