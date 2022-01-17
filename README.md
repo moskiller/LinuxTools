@@ -13,7 +13,7 @@ wget -N https://raw.githubusercontent.com/moskiller/LinuxTools/main/linuxtools.s
 
 ## 运行
 ```shell
-bash LTBox.sh
+bash linuxtools.sh
 ```
 
 ## 更新内容
