@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 版本号和更新内容函数
-Version="0.0.3"
+Version="0.0.4"
 Udate="2022/01/17"
 ChangeLog="新增Aria2和哪吒探针"
 
@@ -19,7 +19,9 @@ if [ $release = "Centos" ]; then
 yum -y update && yum install curl -y
 else
 apt-get update -y && apt-get install curl -y
-fi	   
+fi
+else
+green "Curl 已安装"
 fi
 
 if ! type wget >/dev/null 2>&1; then 
@@ -30,7 +32,7 @@ else
 apt-get update -y && apt-get install wget -y
 fi	   
 else
-green "已安装 Wget "
+green "Wget 已安装"
 fi
 
 if ! type sudo >/dev/null 2>&1; then 
@@ -41,7 +43,7 @@ else
 apt-get update -y && apt-get install sudo -y
 fi	   
 else
-green "已安装 Sudo "
+green "Sudo 已安装"
 fi
 
 # 定义检测内核、架构、有道翻译等函数
@@ -83,12 +85,15 @@ elif cat /proc/version | grep -q -E -i "centos|red hat|redhat"; then
 release="Centos"
 else 
 red "不能识别您当前的操作系统，请使用Centos,Ubuntu,Debian系统"
-rm -f LTBox.sh
+rm -f linuxtools.sh
 exit 1
 fi
 
 
-# 菜单
+
+
+
+# ================================ Main Menu ==========================
 function Start_Menu(){
 clear
 cat << "EOF"
@@ -112,11 +117,11 @@ echo "                                                                          
 echo "========================================================================================="
 echo "                    " 
 echo " VPS信息 "
-echo " 主机名称是：$vpsname "
-echo " 操作系统是：$release "
+echo " 主机名称：$vpsname "
+echo " 操作系统：$release "
 echo " 内核版本：$kernelver "
-echo " 处理器架构是：$arch   "
-echo " 虚拟化架构是：$virt   "
+echo " 处理器架构：$arch   "
+echo " 虚拟化架构：$virt   "
 echo "                    "
 echo " IPV4 "
 if [ -z "$IP4" ]; then
@@ -147,12 +152,11 @@ blue "2. 安装节点脚本"
 blue "3. 安装面板脚本"
 blue "4. 探针相关脚本"
 blue "5. 运行测试脚本"
+blue "6. 其它脚本"
 blue "                            "
 blue "9. 更新本脚本"
 blue "0. 退出脚本"
 blue "                            "
-while :
-do
 reading "请输入数字选项:" MenuNumber
 case "$MenuNumber" in
      1 ) p1 ;;
@@ -160,14 +164,19 @@ case "$MenuNumber" in
      3 ) p3 ;;
      4 ) p4 ;;
      5 ) p5 ;;
+     6 ) p6 ;;
      9 ) update ;;
      0 ) exit 0 ;;
      * ) Start_Menu ;;
 esac
-done
 }
-    
-# 第一页
+# ============== End of Main Menu ================== 
+ 
+ 
+ 
+
+
+# ================== SubMenu 1 =====================
 function p1(){
 clear
 echo "1.系统网络脚本"
@@ -179,11 +188,13 @@ echo "2. 安装 Warp (by fscarmen)"
 echo "3. 安装 Docker"
 echo "4. 一键修改DNS为Trex.fi的DNS64解析"
 echo "5. 修改主机名"
+echo "6. 显示实时进程情况"
+echo "7. 显示内存使用情况"
+echo "8. 显示磁盘占用情况"
+echo "9. VPS系统升级"
 echo "           "
 echo "0. 返回主菜单"
 echo "           "
-while :
-do
 reading "请输入选项(回车键默认取消):" P1NumberInput
 case "$P1NumberInput" in
      1 ) bbr ;;
@@ -191,13 +202,21 @@ case "$P1NumberInput" in
      3 ) docker ;;
      4 ) dns64ns ;;
      5 ) changehostname ;;
+     6 ) realtimeprogress ;;
+     7 ) memoryspace ;;
+     8 ) drivespace ;;
+     9 ) updatevps ;;
      0 ) Start_Menu ;;
      * ) Start_Menu ;;
 esac
-done
 }
+# ==================================================
 
-# 第二页
+
+
+
+
+# ================== SubMenu 2 =====================
 function p2(){
 clear
 echo "2.安装节点脚本"
@@ -207,23 +226,27 @@ echo "          "
 echo "1. 安装 一键SS四合一脚本 (by teddysun)"
 echo "2. 安装 V2 8合1脚本 (by mack-a) "
 echo "3. 安装 支持IBM LinuxONE的V2脚本 (by hijkpw)"
+echo "4. 安装 一键安装 V2Ray 脚本 (by 233v2.com)"
 echo "           "
 echo "0. 返回主菜单"
 echo "           "
-while :
-do
 reading "请输入选项:" P2NumberInput
 case "$P2NumberInput" in
      1 ) teddysun ;;
      2 ) macka ;;
      3 ) hijkpw ;;
+     4 ) 233v2 ;;
      0 ) Start_Menu ;;
      * ) Start_Menu ;;
 esac
-done
 }
+# ==================================================
 
-# 第三页
+
+
+
+
+# ================== SubMenu 3 =====================
 function p3(){
 clear
 echo "3.安装面板脚本"
@@ -233,12 +256,10 @@ echo "          "
 echo "1. 安装 宝塔纯净版 7.6.0 (by hostcli.com)"
 echo "2. 安装 安装 X-UI面板 (by vaxilu)"
 echo "3. 安装 aaPanel (宝塔国际版)"
-echo "4. 安装 Aria2一键脚本"
+echo "4. 安装 Aria2 一键脚本"
 echo "           "
 echo "0. 返回主菜单"
 echo "           "
-while :
-do
 reading "请输入选项:" P3NumberInput
 case "$P3NumberInput" in
      1 ) btclean ;;
@@ -248,10 +269,14 @@ case "$P3NumberInput" in
      0 ) Start_Menu ;;
      * ) Start_Menu ;;
 esac
-done
 }
+# ==================================================
 
-# 第四页
+
+
+
+
+# ================== SubMenu 4 =====================
 function p4(){
 clear
 echo "4.探针相关脚本"
@@ -263,8 +288,6 @@ echo "2. 安装 哪吒探针 (by naiba)"
 echo "           "
 echo "0. 返回主菜单"
 echo "           "
-while :
-do
 reading "请输入选项:" P4NumberInput
 case "$P4NumberInput" in
      1 ) serverstatus ;;
@@ -272,10 +295,14 @@ case "$P4NumberInput" in
      0 ) Start_Menu ;;
      * ) Start_Menu ;;
 esac
-done
 }
+# ==================================================
 
-# 第五页
+
+
+
+
+# ================== SubMenu 5 =====================
 function p5(){
 clear
 echo "5.运行测试脚本"
@@ -291,9 +318,7 @@ echo "6. bestTrace 测试回程脚本"
 echo "           "
 echo "0. 返回主菜单"
 echo "                            "
-while :
-do
-reading "请输入选项(回车键默认取消):" P5NumberInput
+reading "请输入选项:" P5NumberInput
 case "$P5NumberInput" in
      1 ) mediaUnblockTestAll ;;
      2 ) mediaUnblockTest ;;
@@ -304,49 +329,44 @@ case "$P5NumberInput" in
      0 ) Start_Menu ;;
      * ) Start_Menu ;;
 esac
-done
+}
+# ==================================================
+
+
+
+
+
+# ================== SubMenu 6 =====================
+function p6(){
+clear
+echo "6.其它脚本"
+echo "           "
+echo "请选择功能： "                  
+echo "          "
+echo "1. cxxmatrix 黑客帝国屏保 (by akinomyoga)"
+echo "           "
+echo "0. 返回主菜单"
+echo "           "
+reading "请输入选项:" P6NumberInput
+case "$P6NumberInput" in
+     1 ) cxxmatrix ;;
+     0 ) Start_Menu ;;
+     * ) Start_Menu ;;
+esac
 }
 
+# ==================================================
 
 
 
 
-# 以下为脚本功能区
 
-# 秋水大佬的一键SS四合一脚本
-function teddysun(){
-    wget --no-check-certificate -O shadowsocks-all.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh && chmod +x shadowsocks-all.sh && ./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
-}
 
-function warp(){
-    wget -N https://cdn.jsdelivr.net/gh/fscarmen/warp/menu.sh && bash menu.sh
-}
 
-function xui(){
-    bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
-}
 
-function aria2onekey(){
-    if [ $release = "Centos" ]; then
-        yum install wget curl ca-certificates && wget -N git.io/aria2.sh && chmod +x aria2.sh && ./aria2.sh
-    else
-        apt install wget curl ca-certificates && wget -N git.io/aria2.sh && chmod +x aria2.sh && ./aria2.sh
-    fi
-}
 
-function aapanel(){
-    if [ $release = "Centos" ]; then
-        yum install -y wget && wget -O install.sh http://www.aapanel.com/script/install_6.0_en.sh && bash install.sh forum
-    elif [ $release = "Debian" ]; then
-        wget -O install.sh http://www.aapanel.com/script/install-ubuntu_6.0_en.sh && bash install.sh forum
-    else
-        wget -O install.sh http://www.aapanel.com/script/install-ubuntu_6.0_en.sh && sudo bash install.sh forum
-    fi
-}
 
-function macka(){
-    wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
-}
+# ================== Script Page 1 ===================
 
 function bbr(){
     if [ ${virt} == "kvm" ]; then
@@ -363,6 +383,83 @@ function bbr(){
     fi
 }
 
+function warp(){
+    wget -N https://cdn.jsdelivr.net/gh/fscarmen/warp/menu.sh && bash menu.sh
+}
+
+function docker(){
+    curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+}
+
+function dns64ns(){
+    cp /etc/resolv.conf /etc/resolv.conf.bak
+    echo -e "nameserver 2001:67c:2b0::4\nnameserver 2001:67c:2b0::6" > /etc/resolv.conf
+    echo " 写入完成，原文件备份为 /etc/resolv.conf.bak "
+}
+
+function changehostname(){
+    reading "请输入您想要的新主机名:" newhostname
+    hostnamectl set-hostname $newhostname
+    green "修改完成，请重新连接SSH 或 重新启动服务器!"
+}
+
+function realtimeprogress(){
+    green "ctrl + c 退出"
+    top
+}
+
+function memoryspace(){
+    free -m
+}
+
+function drivespace(){
+    df -h
+}
+
+function updatevps(){
+    if [ $release = "Centos" ]; then
+        yum update -y
+        yum update -y && apt-get install curl -y
+    else
+        apt update -y
+        apt-get update -y && apt-get install curl -y
+    fi
+}
+
+# ================== Script Page 1 ===================
+
+
+
+
+
+
+# ================== Script Page 2 ===================
+
+function teddysun(){
+    wget --no-check-certificate -O shadowsocks-all.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh && chmod +x shadowsocks-all.sh && ./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
+}
+
+function macka(){
+    wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
+}
+
+function hijkpw(){
+    bash <(curl -sL https://raw.githubusercontent.com/moskiller/scripts/master/v2ray.sh)
+}
+
+function 233v2(){
+    bash <(curl -s -L https://git.io/v2ray.sh)
+}
+
+# ================== Script Page 2 ===================
+
+
+
+
+
+
+# ================== Script Page 3 ===================
+
 function btclean(){
     echo "                   "
     echo "请选择你需要安装的版本"
@@ -376,12 +473,12 @@ function btclean(){
     echo "------------------"
     reading "请输入选项:" menuNumberInput1
     case "$menuNumberInput1" in     
-        1 ) btcleancentos;;
-        2 ) btcleanubuntu;;
-        3 ) btcleandebian;;
-        4 ) btcleanfedora;;
-        5 ) btcleanupdata;;
-        0 ) start_menu;;
+        1 ) btcleancentos ;;
+        2 ) btcleanubuntu ;;
+        3 ) btcleandebian ;;
+        4 ) btcleanfedora ;;
+        5 ) btcleanupdata ;;
+        0 ) Start_Menu ;;
     esac
 }
 
@@ -404,9 +501,64 @@ function btcleanupdata(){
     curl http://v7.hostcli.com/install/update6.sh|bash
 }
 
-function docker(){
-    curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+
+function xui(){
+    bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 }
+
+function aapanel(){
+    if [ $release = "Centos" ]; then
+        yum install -y wget && wget -O install.sh http://www.aapanel.com/script/install_6.0_en.sh && bash install.sh forum
+    elif [ $release = "Debian" ]; then
+        wget -O install.sh http://www.aapanel.com/script/install-ubuntu_6.0_en.sh && bash install.sh forum
+    else
+        wget -O install.sh http://www.aapanel.com/script/install-ubuntu_6.0_en.sh && sudo bash install.sh forum
+    fi
+}
+
+function aria2onekey(){
+    if [ $release = "Centos" ]; then
+        yum install wget curl ca-certificates && wget -N git.io/aria2.sh && chmod +x aria2.sh && ./aria2.sh
+    else
+        apt install wget curl ca-certificates && wget -N git.io/aria2.sh && chmod +x aria2.sh && ./aria2.sh
+    fi
+}
+
+# ================== Script Page 3 ===================
+
+
+
+
+
+
+# ================== Script Page 4 ===================
+
+function serverstatus(){
+    wget -N https://raw.githubusercontent.com/cokemine/ServerStatus-Hotaru/master/status.sh
+    echo "请选择你需要安装的客户端类型"
+    echo "1. 服务端"
+    echo "2. 监控端"
+    echo "0. 返回主页"
+    reading "请输入选项:" menuNumberInput1
+    case "$menuNumberInput1" in     
+        1 ) bash status.sh s ;;
+        2 ) bash status.sh c ;;
+        0 ) Start_Menu ;;
+    esac
+}
+
+function nezha(){
+    curl -L https://raw.githubusercontent.com/naiba/nezha/master/script/install.sh -o nezha.sh && chmod +x nezha.sh && sudo ./nezha.sh
+}
+
+# ================== Script Page 4 ===================
+
+
+
+
+
+
+# ================== Script Page 5 ===================
 
 function mediaUnblockTestAll(){
     bash <(curl -L -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/check.sh)
@@ -417,7 +569,23 @@ function mediaUnblockTest(){
 }
 
 function vpsSpeedTest(){
-    bash <(curl -sSL "https://github.com/CoiaPrant/Speedtest/raw/main/speedtest-multi.sh")
+    green "单线程/双线程三网测速"
+    echo "1. 多线程(默认)"
+    echo "2. 单线程"
+    echo "0. 返回上级目录"
+    read -p "请输入选项（直接回车为多线程) ：" chinaSpeedTestChoice
+    case "$chinaSpeedTestChoice" in
+        1 )
+            bash <(curl -sSL "https://github.com/CoiaPrant/Speedtest/raw/main/speedtest-multi.sh")
+        ;;
+        2 ) 
+            bash <(curl -sSL "https://github.com/CoiaPrant/Speedtest/raw/main/speedtest-single.sh")
+        ;;
+        0 ) Start_Menu ;;
+        * )
+            bash <(curl -sSL "https://github.com/CoiaPrant/Speedtest/raw/main/speedtest-multi.sh")
+        ;;
+    esac
 }
 
 function superBench(){
@@ -432,42 +600,47 @@ function bestTrace(){
     wget -qO- git.io/besttrace | bash
 }
 
-function serverstatus(){
-    wget -N https://raw.githubusercontent.com/cokemine/ServerStatus-Hotaru/master/status.sh
-    echo "请选择你需要安装的客户端类型"
-    echo "1. 服务端"
-    echo "2. 监控端"
-    echo "0. 返回主页"
-    reading "请输入选项:" menuNumberInput1
-    case "$menuNumberInput1" in     
-        1 ) bash status.sh s ;;
-        2 ) bash status.sh c ;;
-        0 ) start_menu ;;
-    esac
+# ================== Script Page 5 ===================
+
+
+
+
+
+
+
+# ================== Script Page 6 ===================
+
+function cxxmatrix(){
+    if [ $release = "Centos" ]; then
+        sudo yum install make
+        sudo yum install g++ -y
+    else
+        sudo apt install make
+        sudo apt install g++ -y
+    fi
+    cd /home
+    git clone https://github.com/akinomyoga/cxxmatrix.git
+    cd cxxmatrix
+    make
+    ./cxxmatrix 'The Matrix' 'Reloaded'
 }
 
-function nezha(){
-    curl -L https://raw.githubusercontent.com/naiba/nezha/master/script/install.sh -o nezha.sh && chmod +x nezha.sh && sudo ./nezha.sh
-}
+# ================== Script Page 6 ===================
 
-function changehostname(){
-    reading "请输入您想要的新主机名:" newhostname
-    hostnamectl set-hostname $newhostname
-    green "修改完成，请重新连接SSH 或 重新启动服务器!"
-}
 
-function hijkpw(){
-    bash <(curl -sL https://raw.githubusercontent.com/moskiller/scripts/master/v2ray.sh)
-}
 
-function dns64ns(){
-    cp /etc/resolv.conf /etc/resolv.conf.bak
-    echo -e "nameserver 2001:67c:2b0::4\nnameserver 2001:67c:2b0::6" > /etc/resolv.conf
-}
+
+
+
+# ================== Script Page 9 ===================
 
 function update(){
-    wget -N https://raw.githubusercontent.com/moskiller/LinuxToolBox/main/LTBox.sh && chmod -R 777 LTBox.sh && bash LTBox.sh
+    wget -N https://raw.githubusercontent.com/moskiller/LinuxTools/main/linuxtools.sh && chmod -R 777 linuxtools.sh && bash linuxtools.sh
 }
+
+# ================== Script Page 9 ===================
+
+
 
 
 Start_Menu
