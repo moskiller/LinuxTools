@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # 版本号和更新内容函数
-Version="0.0.2"
-Udate="2022/01/09"
-ChangeLog="新增aaPanel和一些测试脚本"
+Version="0.0.3"
+Udate="2022/01/17"
+ChangeLog="新增Aria2和哪吒探针"
 
 # 自定义字体彩色函数
 red(){ echo -e "\033[31m\033[01m$1\033[0m"; }
@@ -20,8 +20,6 @@ yum -y update && yum install curl -y
 else
 apt-get update -y && apt-get install curl -y
 fi	   
-else
-green "已安装 Curl "
 fi
 
 if ! type wget >/dev/null 2>&1; then 
@@ -164,9 +162,7 @@ case "$MenuNumber" in
      5 ) p5 ;;
      9 ) update ;;
      0 ) exit 0 ;;
-     * ) red " !!! 您是不是按错了 ？？？   "
-         reading "请确认上述菜单中的数字，按回车键返回后，再进行正确的输入..." Key
-         ;;
+     * ) Start_Menu ;;
 esac
 done
 }
@@ -185,7 +181,7 @@ echo "4. 一键修改DNS为Trex.fi的DNS64解析"
 echo "5. 修改主机名"
 echo "           "
 echo "0. 返回主菜单"
-echo "                            "
+echo "           "
 while :
 do
 reading "请输入选项(回车键默认取消):" P1NumberInput
@@ -196,9 +192,7 @@ case "$P1NumberInput" in
      4 ) dns64ns ;;
      5 ) changehostname ;;
      0 ) Start_Menu ;;
-     * ) red " !!! 您是不是按错了 ？？？   "
-         reading "请确认上述菜单中的数字，按回车键返回后，再进行正确的输入..." Key
-         ;;
+     * ) Start_Menu ;;
 esac
 done
 }
@@ -213,9 +207,9 @@ echo "          "
 echo "1. 安装 一键SS四合一脚本 (by teddysun)"
 echo "2. 安装 V2 8合1脚本 (by mack-a) "
 echo "3. 安装 支持IBM LinuxONE的V2脚本 (by hijkpw)"
-echo "          "
-echo "0. 退出脚本"
-echo "                            "
+echo "           "
+echo "0. 返回主菜单"
+echo "           "
 while :
 do
 reading "请输入选项:" P2NumberInput
@@ -224,9 +218,7 @@ case "$P2NumberInput" in
      2 ) macka ;;
      3 ) hijkpw ;;
      0 ) Start_Menu ;;
-     * ) red " !!! 您是不是按错了 ？？？   "
-         reading "请确认上述菜单中的数字，按回车键返回后，再进行正确的输入..." Key
-         ;;
+     * ) Start_Menu ;;
 esac
 done
 }
@@ -243,8 +235,8 @@ echo "2. 安装 安装 X-UI面板 (by vaxilu)"
 echo "3. 安装 aaPanel (宝塔国际版)"
 echo "4. 安装 Aria2一键脚本"
 echo "           "
-echo "0. 退出脚本"
-echo "                            "
+echo "0. 返回主菜单"
+echo "           "
 while :
 do
 reading "请输入选项:" P3NumberInput
@@ -254,9 +246,7 @@ case "$P3NumberInput" in
      3 ) aapanel ;;
      4 ) aria2onekey ;;
      0 ) Start_Menu ;;
-     * ) red " !!! 您是不是按错了 ？？？   "
-         reading "请确认上述菜单中的数字，按回车键返回后，再进行正确的输入..." Key
-         ;;
+     * ) Start_Menu ;;
 esac
 done
 }
@@ -269,18 +259,18 @@ echo "           "
 echo "请选择功能： "                  
 echo "          "
 echo "1. 安装 ServerStatus-Horatu探针 (by cokemine)"
+echo "2. 安装 哪吒探针 (by naiba)"
 echo "           "
-echo "0. 退出脚本"
-echo "                            "
+echo "0. 返回主菜单"
+echo "           "
 while :
 do
 reading "请输入选项:" P4NumberInput
 case "$P4NumberInput" in
      1 ) serverstatus ;;
+     2 ) nezha ;;
      0 ) Start_Menu ;;
-     * ) red " !!! 您是不是按错了 ？？？   "
-         reading "请确认上述菜单中的数字，按回车键返回后，再进行正确的输入..." Key
-         ;;
+     * ) Start_Menu ;;
 esac
 done
 }
@@ -299,7 +289,7 @@ echo "4. Superbench 测试"
 echo "5. unixbench 跑分测试 (by rptec)"
 echo "6. bestTrace 测试回程脚本"
 echo "           "
-echo "0. 退出脚本"
+echo "0. 返回主菜单"
 echo "                            "
 while :
 do
@@ -312,9 +302,7 @@ case "$P5NumberInput" in
      5 ) unixBench ;;
      6 ) bestTrace ;;
      0 ) Start_Menu ;;
-     * ) red " !!! 您是不是按错了 ？？？   "
-         reading "请确认上述菜单中的数字，按回车键返回后，再进行正确的输入..." Key
-         ;;
+     * ) Start_Menu ;;
 esac
 done
 }
@@ -458,6 +446,9 @@ function serverstatus(){
     esac
 }
 
+function nezha(){
+    curl -L https://raw.githubusercontent.com/naiba/nezha/master/script/install.sh -o nezha.sh && chmod +x nezha.sh && sudo ./nezha.sh
+}
 
 function changehostname(){
     reading "请输入您想要的新主机名:" newhostname
