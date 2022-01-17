@@ -250,7 +250,7 @@ reading "请输入选项:" P3NumberInput
 case "$P3NumberInput" in
      1 ) btclean ;;
      2 ) xui ;;
-     3 ）aaPanel ;;
+     3 ）aapanel ;;
      0 ) Start_Menu ;;
      * ) red " !!! 您是不是按错了 ？？？   "
          reading "请确认上述菜单中的数字，按回车键返回后，再进行正确的输入..." Key
@@ -336,7 +336,7 @@ function xui(){
     bash <(curl -Ls https://raw.githubusercontent.com/vaxilu/x-ui/master/install.sh)
 }
 
-function aaPanel(){
+function aapanel(){
     if [ $release = "Centos" ]; then
         yum install -y wget && wget -O install.sh http://www.aapanel.com/script/install_6.0_en.sh && bash install.sh forum
       elif [ $release = "Debian" ]; then
