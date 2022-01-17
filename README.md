@@ -7,7 +7,7 @@
 ## 下载
 
 ```shell
-wget -N https://raw.githubusercontent.com/moskiller/LinuxToolBox/main/LTBox.sh && chmod -R 777 LTBox.sh && bash LTBox.sh
+wget -N https://raw.githubusercontent.com/moskiller/LinuxTools/main/linuxtools.sh && chmod -R 777 linuxtools.sh && bash linuxtools.sh
 ```
 
 
