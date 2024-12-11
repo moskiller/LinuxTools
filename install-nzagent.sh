@@ -202,12 +202,16 @@ temperature: false
 tls: false
 use_gitee_to_upgrade: false
 use_ipv6_country_code: false
-uuid: $(uuidgen)
+uuid: $(uuidgen)   # 自动生成唯一标识符
 EOF
 
     # 生成启动脚本
     cat > ${WORKDIR}/start.sh << EOF
 #!/bin/bash
+if pgrep -f 'nezha-agent' >/dev/null; then
+    echo "Nezha Agent 已经在运行中"
+    exit 0
+fi
 pgrep -f 'nezha-agent' | xargs -r kill
 cd ${WORKDIR}
 TMPDIR="${WORKDIR}" exec ${WORKDIR}/nezha-agent -c config.yml >/dev/null 2>&1
