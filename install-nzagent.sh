@@ -317,6 +317,7 @@ main() {
     if [ "$(uname)" != "FreeBSD" ]; then
         log "ERROR" "此脚本仅支持 FreeBSD 系统"
         exit 1
+    fi
     }
     
     # 创建工作目录
